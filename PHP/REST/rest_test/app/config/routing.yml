@@ -1,0 +1,13 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+users:
+    resource: "AppBundle\Controller\UserRESTController"
+    prefix:   /api
+    type:     rest
+
+shifts:
+    resource: "AppBundle\Controller\ShiftRESTController"
+    prefix:   /api
+    type:     rest
