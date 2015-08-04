@@ -29,11 +29,25 @@ class Shift
     private $manager_id;
 
     /**
+     * @OneToOne(targetEntity="User" inversedBy="shift")
+     * @JoinColumn(name="manager_id" reference_column="id"
+     */
+    private $manager;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="employee_id", type="integer")
      */
     private $employee_id;
+
+    /**
+     * @var string
+     *
+     * @OneToOne(targetEntity="User" inversedBy="shift")
+     * @JoinColumn(name="employee_id" reference_column="id"
+     */
+    private $employee;
 
     /**
      * @var float

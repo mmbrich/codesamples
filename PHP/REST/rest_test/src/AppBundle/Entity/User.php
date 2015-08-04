@@ -29,6 +29,11 @@ class User
     private $name;
 
     /**
+     * @OneToOne(targetEntity="Shift" mappedBy="employee")
+     */
+    private $shift;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="role", type="string", length=25)
