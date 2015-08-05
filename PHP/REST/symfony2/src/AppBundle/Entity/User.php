@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Post
@@ -37,6 +38,7 @@ class User
      * @var string
      *
      * @ORM\Column(name="role", type="string", length=25)
+     * @Assert\Choice(choices={"employee", "manager"})
      */
     private $role;
 
