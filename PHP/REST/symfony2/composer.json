@@ -22,7 +22,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "voryx/restgeneratorbundle": "dev-master",
         "nelmio/cors-bundle": "^1.4",
-        "friendsofsymfony/rest-bundle": "^1.7"
+        "friendsofsymfony/rest-bundle": "^1.7",
+	"hwi/oauth-bundle": "0.4.*@dev"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
