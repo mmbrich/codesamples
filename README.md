@@ -1,5 +1,5 @@
 # codesamples
-This is a simple REST API from the following code challenge
+This is a simple REST API from the following code challenge.  This is a work-in-progress.  I plan to complete this test with multiple frameworks and I may build a UI as well.
 
 # REST Scheduler API
 
