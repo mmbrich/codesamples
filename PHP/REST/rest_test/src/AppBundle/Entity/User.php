@@ -29,7 +29,7 @@ class User
     private $name;
 
     /**
-     * @OneToOne(targetEntity="Shift" mappedBy="employee")
+     * @ORM\OneToOne(targetEntity="Shift", mappedBy="employee")
      */
     private $shift;
 

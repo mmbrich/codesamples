@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity;
 
 /**
  * Post
@@ -29,8 +30,11 @@ class Shift
     private $manager_id;
 
     /**
-     * @OneToOne(targetEntity="User" inversedBy="shift")
-     * @JoinColumn(name="manager_id" reference_column="id"
+     * @var string
+     *
+     * @ORM\Column(name="manager", type="string")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="shift")
+     * @ORM\JoinColumn(name="manager_id", referencedColumnName="id")
      */
     private $manager;
 
@@ -44,8 +48,8 @@ class Shift
     /**
      * @var string
      *
-     * @OneToOne(targetEntity="User" inversedBy="shift")
-     * @JoinColumn(name="employee_id" reference_column="id"
+     * @ORM\OneToOne(targetEntity="User", inversedBy="shift")
+     * @ORM\JoinColumn(name="employee_id", referencedColumnName="id")
      */
     private $employee;
 
