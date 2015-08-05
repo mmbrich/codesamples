@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Entity\User as BaseUser;
 
 /**
  * Post
@@ -11,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table()
  * @ORM\Entity
  */
-class User
+class User extends BaseUser
 {
     /**
      * @var integer
@@ -20,19 +21,26 @@ class User
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
+
+   /**
+     * @var string
+     *
+     * @ORM\Column(name="linkedin_id", type="string", nullable=true)
+     */
+    protected $linkedinId;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\OneToOne(targetEntity="Shift", mappedBy="employee")
      */
-    private $shift;
+    protected $shift;
 
     /**
      * @var string
@@ -40,35 +48,42 @@ class User
      * @ORM\Column(name="role", type="string", length=25)
      * @Assert\Choice(choices={"employee", "manager"})
      */
-    private $role;
+    protected $role;
 
     /**
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
      */
-    private $email;
+    protected $email;
 
     /**
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=255)
      */
-    private $phone;
+    protected $phone;
 
     /**
      * @var string
      *
      * @ORM\Column(name="created_at", type="date", nullable=true)
      */
-    private $created_at;
+    protected $created_at;
 
     /**
      * @var string
      *
      * @ORM\Column(name="updated_at", type="date", nullable=true)
      */
-    private $updated_at;
+    protected $updated_at;
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        // your own logic
+    }
 
     /**
      * Get id

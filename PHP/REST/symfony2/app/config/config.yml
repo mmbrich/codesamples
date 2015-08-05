@@ -114,10 +114,28 @@ hwi_oauth:
     # name of the firewall in which this bundle is active, this setting MUST be set
     firewall_name: secured_area
     resource_owners:
-        my_linkedin:
+        linkedin:
             type:           linkedin
-            client_id:      <client_id>
-            client_secret:  <client_secret>
-            scope:          r_fullprofile
+            client_id:      77zjarv1bgq39v
+            client_secret:  ElKsBju9fa6prkS4
+            scope:          r_basicprofile
+            infos_url:     "http://api.linkedin.com/v1/people/~:(id,formatted-name,recommendations-received)"
             paths:
                realname:  ["first_name", "last_name"]
+
+    # if you want to use 'connect' and do not use the FOSUB integration, configure these separately
+    connect: ~
+#        confirmation: true # should show confirmation page or not
+#        registration_form_handler: my_registration_form_handler
+#        registration_form: my_registration_form
+#        account_connector: my_link_provider # can be the same as your user provider
+
+    # optional HTTP Client configuration
+    http_client:
+        timeout:       5
+        verify_peer:   true
+        ignore_errors: true
+        max_redirects: 5
+
+    # allows to switch templating engine for bundle views
+    #templating_engine: "php"
