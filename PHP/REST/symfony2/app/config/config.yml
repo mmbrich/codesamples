@@ -114,8 +114,10 @@ hwi_oauth:
     # name of the firewall in which this bundle is active, this setting MUST be set
     firewall_name: secured_area
     resource_owners:
-        any_name:
+        my_linkedin:
             type:           linkedin
             client_id:      <client_id>
             client_secret:  <client_secret>
             scope:          r_fullprofile
+	    paths:
+               realname:  ["first_name", "last_name"]
