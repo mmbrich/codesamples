@@ -26,7 +26,8 @@ ul{
 }
 
 .large {
-    width:595px;
+    max-width:595px;
+    max-height:295px;
 }
 
 .mainimageshell {
