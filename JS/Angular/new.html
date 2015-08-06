@@ -1,0 +1,26 @@
+<!doctype html>
+<html ng-app>
+	<head>
+		<title>Personal Assistant</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    		<script src="assistant.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="ng-prettyjson.min.css">
+		<script type="text/javascript" src="ng-prettyjson.min.js"></script>
+		<script type="text/javascript">
+			var myApp = angular.module('myApp',[]);
+			angular.module('myApp', ['ngPrettyJson']);
+		</script>
+	</head>
+
+	<body>
+		<div ng-controller="Assistant" ng-init="init('What is AngularJS?')">
+      			<label>Ask Me Anything!:</label>
+      			<input type="text" ng-model="input" placeholder="Enter your question here"> 
+			&nbsp; <a ng-href='#' ng-click='init(input)' >click me</a>
+      			<hr>
+      			<h1>{{input}}</h1>
+			<pre pretty-json="jsonObj"> {{jsonObj | json}} </pre>
+		</div>
+	</body>
+</html>
