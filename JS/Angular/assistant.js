@@ -2,7 +2,14 @@ function Assistant($scope, $http) {
 
 	$scope.makeParagraphs = function(txt){
 		var text = txt.replace(/^"(.*)"$/, '$1');
-    		return text.replace(/(.{200}[^\.]*)(\.)+/g, '<p>$1.</p>');
+    		return text.replace(/(.{400}[^\.]*)(\.)+/g, '<p>$1.</p>');
+	}
+
+	$scope.scrollTo = function(image,ind) {
+		console.log(image+" -- "+ind);
+
+    		$scope.listposition = {left:(595 * ind * -1) + "px"};
+    		$scope.selected = image;
 	}
 
 	$scope.init = function(input) {
@@ -25,6 +32,8 @@ function Assistant($scope, $http) {
         	success(function(data) {
             		$scope.jsonObj = data;
             		$scope.output = data.output;
+
+			console.log(data.output);
 			
 			try {
 				if(typeof data.output[0].actions.say.text !== undefined)
@@ -41,7 +50,7 @@ function Assistant($scope, $http) {
 			} catch(e) {console.log(e);}
 			try {
 				if(typeof data.output[0].actions.show.images !== undefined)
-					$scope.articleImage = data.output[0].actions.show.images[0];
+					$scope.articleImage = data.output[0].actions.show.images;
 			} catch(e) {console.log(e);}
         	});
 	}

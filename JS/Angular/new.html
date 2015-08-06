@@ -6,6 +6,7 @@
     		<script src="assistant.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="ng-prettyjson.min.css">
+		<link rel="stylesheet" type="text/css" href="style.css">
 		<script type="text/javascript" src="ng-prettyjson.min.js"></script>
 		<script type="text/javascript">
 			var myApp = angular.module('myApp',[]);
@@ -22,15 +23,41 @@
 			<div>
 				<h1 ng-show="articleTitles != ''">{{articleTitles}}</h1>
 			</div>
-			<div ng-if="articleText != ''">
-				<div ng-show="articleURL != ''">
+
+			<div class="mainimageshell">
+    				<div class="viewwindow">
+        				<ul id="fullscroller" class="fullsizelist" ng-style="listposition" >
+            					<li ng-repeat="image in articleImage">
+                					<img id="fullsize" class="large" ng-src="{{image}}" />
+            					</li>
+        				</ul>
+    				</div>
+			</div>
+ 
+			<div class="captionshell">
+				<div class="caption" ng-show="articleURL != ''">
 					<a target="_blank" ng-href="{{articleURL}}">{{articleText}}</a>
 				</div>
-				<div ng-show="articleURL == ''">
-					<img align="left" style="padding-right:10px;" ng-src="{{articleImage}}" ng-show="articleImage != ''" />
+
+				<div class="caption" ng-show="articleURL == ''">
 					<div ng-bind-html-unsafe="articleText">{{articleText}}</div>
 				</div>
 			</div>
+ 
+			<div class="thumbsshell">
+    				<div class="thumbswrapper">
+        				<ul>
+            					<li ng-repeat="image in articleImage">
+                					<div class="thumbwrapper">
+                    						<a ng-href="#" ng-click="scrollTo(image,$index);">
+                        						<img class="thumbnail" ng-src="{{image}}" />
+                    						</a>
+                					</div>
+            					</li>
+        				</ul>
+    				</div>
+			</div>
 		</div>
+
 	</body>
 </html>
