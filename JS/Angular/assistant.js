@@ -7,7 +7,8 @@ function Assistant($scope, $http) {
 
 	$scope.scrollTo = function(image,ind) {
 		var el = document.getElementById( 'fullsize' );
-    		$scope.listposition = {left:(el.width * ind * -1) + "px"};
+    		$scope.listposition = {left:(el.width * (ind-1) * -1) + "px"};
+    		//$scope.listposition = {left:(el.width * ind * -1) + "px"};
     		$scope.selected = image;
 	}
 
