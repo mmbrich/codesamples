@@ -14,26 +14,23 @@
 	</head>
 
 	<body>
-		<div ng-controller="Assistant" ng-init="init('What is AngularJS?')">
+		<div ng-controller="Assistant" ng-init="init('What is AngularJS?')" style="padding:10px;">
       			<label>Ask Me Anything:</label>
       			<input type="text" ng-model="input" placeholder="Enter your question here"> 
 			&nbsp; <a ng-href='#' ng-click='init(input)' >ask me</a>
       			<hr>
-			<h1 ng-show="articleTitles != ''">{{articleTitles}}</h1>
 			<div>
-				<img ng-src="{{articleImage}}" ng-show="articleImage != ''" />
+				<h1 ng-show="articleTitles != ''">{{articleTitles}}</h1>
 			</div>
 			<div ng-if="articleText != ''">
 				<div ng-show="articleURL != ''">
 					<a target="_blank" ng-href="{{articleURL}}">{{articleText}}</a>
 				</div>
 				<div ng-show="articleURL == ''">
-					{{articleText}}
+					<img align="left" style="padding-right:10px;" ng-src="{{articleImage}}" ng-show="articleImage != ''" />
+					<div ng-bind-html-unsafe="articleText">{{articleText}}</div>
 				</div>
 			</div>
-
-			<br /><br />
-			<pre pretty-json="jsonObj"> {{jsonObj | json}} </pre>
 		</div>
 	</body>
 </html>

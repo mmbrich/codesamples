@@ -1,5 +1,10 @@
 function Assistant($scope, $http) {
 
+	$scope.makeParagraphs = function(txt){
+		var text = txt.replace(/^"(.*)"$/, '$1');
+    		return text.replace(/(.{200}[^\.]*)(\.)+/g, '<p>$1.</p>');
+	}
+
 	$scope.init = function(input) {
         	$scope.jsonObj = '';
         	$scope.output = '';
@@ -23,7 +28,7 @@ function Assistant($scope, $http) {
 			
 			try {
 				if(typeof data.output[0].actions.say.text !== undefined)
-					$scope.articleText = data.output[0].actions.say.text;
+					$scope.articleText = $scope.makeParagraphs(data.output[0].actions.say.text);
 			} catch(e) {console.log(e);}
 			try {
 				if(typeof data.output[0].actions.open.url !== undefined)
