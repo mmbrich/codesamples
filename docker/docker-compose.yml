@@ -1,0 +1,112 @@
+version: '2'
+
+networks:
+  apt-net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
+        gateway: 172.16.238.1
+
+services:
+    php-fpm:
+        restart: always
+        build:
+            context: ./php-fpm
+            dockerfile: Dockerfile-70
+        volumes_from:
+            - application
+            - data
+        expose:
+            - "9000"
+        links:
+            - workspace
+            - redis
+            - mysql
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.2
+
+    application:
+        build: ./application
+        volumes:
+            - ./../:/var/www/laravel
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.3
+
+    data:
+        build: ./data
+        volumes:
+            - /var/lib/mysql
+            - /var/lib/redis
+
+    nginx:
+        restart: always
+        build: ./nginx
+        volumes_from:
+            - application
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
+        links:
+            - php-fpm
+        ports:
+            - "172.16.238.1:80:80"
+            - "172.16.238.1:443:443"
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.4
+
+    mysql:
+        restart: always
+        build: ./mysql
+        volumes_from:
+            - data
+        expose:
+            - "3306"
+        environment:
+            MYSQL_DATABASE: homestead
+            MYSQL_USER: homestead
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.5
+
+    redis:
+        restart: always
+        build: ./redis
+        volumes_from:
+            - data
+        expose:
+            - "6379"
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.6
+
+    nodesignals:
+        restart: always
+        build: ./nodesignals
+        volumes_from:
+            - application
+        ports:
+            - "172.16.238.1:3000:3000"
+        links:
+            - mysql
+            - redis
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.7
+
+    workspace:
+        build: ./workspace
+        tty: true
+        volumes_from:
+            - application
+        networks:
+            apt-net:
+                ipv4_address: 172.16.238.8

@@ -1,0 +1,109 @@
+FROM php:7.0-fpm
+
+MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
+
+ADD ./laravel.ini /usr/local/etc/php/conf.d
+ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
+ADD ./passwd /etc/
+ADD ./fonts.list /etc/apt/sources.list.d/
+ADD ./sources.list /etc/apt/
+ADD ./xvfb /etc/init.d/
+RUN chmod a+x /etc/init.d/xvfb
+RUN update-rc.d xvfb defaults 10
+
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get clean && apt-get autoclean
+
+RUN apt-get update && apt-get install -y --force-yes --fix-missing \
+    libpq-dev \
+    libmemcached-dev 
+
+# Install LibreOffice stuff for doc transforms
+RUN apt-get install -y --force-yes --fix-missing \
+    poppler-utils wget \
+    libfreetype6 libjpeg62-turbo libmcrypt4 libpng12-0 \
+    zlib1g-dev libpng12-dev libmcrypt-dev libjpeg-dev libfreetype6-dev
+
+RUN addgroup --system messagebus
+RUN apt-get install -y --force-yes --fix-missing xz-utils \
+    default-jre-headless \
+    libreoffice-common libreoffice-writer \
+    libreoffice-calc \
+    libreoffice-base libreoffice-base-drivers \
+    libreoffice-base-core unoconv libexif12 libexif-dev \
+    libsdl2-ttf-2.0-0 libxfont1 libotf0  gsfonts ttf-unfonts-core \
+    libfreetype6 googlefontdirectory-tools ttf-freefont otf-freefont fonts-freefont-ttf \
+    libxft2 xfonts-utils xfonts-100dpi xfonts-100dpi-transcoded \
+    ttf-unifont xfonts-unifont ttf-unifont psf-unifont xfonts-tipa libsdl2-ttf-2.0-0 \
+    libxfont1 libotf0 gsfonts ttf-unfonts-core libfreetype6 googlefontdirectory-tools \
+    ttf-freefont otf-freefont fonts-freefont-ttf fontconfig \
+    curl ttf-freefont ttf-mscorefonts-installer ttf-bitstream-vera ttf-dejavu ttf-liberation xz-utils xvfb
+
+
+# Install extensions using the helper script provided by the base image
+RUN docker-php-ext-install \
+    pdo_mysql \
+    pdo_pgsql
+
+RUN docker-php-ext-configure gd \
+    --enable-gd-native-ttf \
+    --with-jpeg-dir=/usr/lib/x86_64-linux-gnu \
+    --with-png-dir=/usr/lib/x86_64-linux-gnu \
+    --with-freetype-dir=/usr/lib/x86_64-linux-gnu
+
+RUN docker-php-ext-install \
+    gd mcrypt zip
+
+
+# install NewRelic
+RUN (wget -O - https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
+  sh -c 'echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list')
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --fix-missing newrelic-php5
+RUN ln -s /usr/lib/newrelic-php5/agent/x64/newrelic-20131226.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+RUN cp /usr/lib/newrelic-php5/scripts/newrelic.ini.template /usr/local/etc/php/conf.d/newrelic.ini
+
+# Expose NewRelic config vars 
+ENV NEWRELIC_LICENSE **None**
+ENV NEWRELIC_APPNAME PRINT For PODIO
+
+# Install TidyHTML
+RUN wget http://binaries.html-tidy.org/binaries/tidy-5.2.0/tidy-5.2.0-64bit.deb 
+RUN dpkg -i tidy-5.2.0-64bit.deb
+RUN rm tidy-5.2.0-64bit.deb
+RUN apt-get clean
+
+# clean up
+RUN apt-get clean
+
+# needed for conversions
+RUN ln -s /usr/lib/x86_64-linux-gnu/libtiff.so.5 /usr/lib/x86_64-linux-gnu/libtiff.so.3
+
+# remove the core packages for new install
+#RUN sudo apt-get remove -y --force-yes --fix-missing libreoffice-core
+
+# grab the bleeding edge libreoffice stuff for conversions
+#ADD LibreOfficeDev_5.2.0.0.beta1_Linux_x86-64_deb.tar.gz /root/
+RUN wget http://download.documentfoundation.org/libreoffice/testing/5.2.0/deb/x86_64/LibreOffice_5.2.0.1_Linux_x86-64_deb.tar.gz
+RUN tar -zxvf LibreOffice_5.2.0.1_Linux_x86-64_deb.tar.gz
+RUN cd LibreOffice_5.2.0.1_Linux_x86-64_deb/DEBS/ && dpkg -i --force-all ./*.deb
+#RUN cd LibreOffice_5.2.0.1_Linux_x86-64_deb/DEBS/ && dpkg -i --force-all ./*.deb
+RUN rm -rf LibreOffice_5.2.0.1_Linux_x86-64_deb && rm -f LibreOffice_5.2.0.1_Linux_x86-64_deb.tar.gz
+
+# download google pdf converter
+RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+RUN tar -xvf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+RUN mv wkhtmltox /usr/local/.
+RUN ln -s /usr/local/wkhtmltox/bin/wkhtmltopdf /usr/local/bin/.
+RUN ln -s /usr/local/wkhtmltox/bin/wkhtmltoimage /usr/local/bin/.
+
+RUN usermod -u 1000 www-data
+
+VOLUME /var/www/laravel
+WORKDIR /var/www/laravel
+
+RUN /etc/init.d/xvfb restart
+
+CMD ["php-fpm"]
+
+EXPOSE 9000
