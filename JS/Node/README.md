@@ -1,0 +1,1 @@
+A simple worker script to get fields and values via AJAX and then sort and filter the fields for display in react.  This was moved to a web worker because it was clogging up the main execution loop if a user had a large workspace with thousands of fields.
