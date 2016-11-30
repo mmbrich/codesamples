@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+
 use App\User;
 use App\Utils;
 use App\Events;
@@ -30,7 +32,7 @@ class TransformController extends Controller
     public $fileType;
     public $templateId;
 
-    private $unoPath = '/usr/bin';
+    private $unoPath = '/usr/sbin';
 
     public function transformDocument($templateId, $purify = false, $tidy = false) {
 	\Log::info("Transforming Document");
@@ -60,8 +62,10 @@ class TransformController extends Controller
 	$this->fullFile = $newFile;
 	$this->filePath = $dirName;
 
+
 	// 2) Get file type and start doc transform
 	$ftype = $this->getFileType();
+
 
 	\Log::info($ftype);
 	if($ftype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || $ftype == "application/zip") {
