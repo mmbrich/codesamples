@@ -27,7 +27,7 @@ module.exports = function (self) {
         	    client.timeout = options.timeout;
         	    client.ontimeout = function () { 
         	        options.error('timeout', 'timeout', client); 
-        	    }
+        	    };
         	}
         	client.open(options.type, options.url, options.async);
 
